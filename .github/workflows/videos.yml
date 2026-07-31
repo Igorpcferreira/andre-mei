@@ -1,0 +1,48 @@
+# Mantém a seção do YouTube em dia sozinha.
+#
+# Toda madrugada lê o feed do canal do André, baixa as capas dos vídeos novos e, SE alguma
+# coisa mudou, comita e dá push. O push na main é o que dispara o deploy na Vercel.
+#
+# Se nada mudou (o caso comum: ele publica a cada 1 a 3 semanas), o job termina sem commit e
+# sem deploy. Nada de rebuild diário à toa.
+#
+# Para rodar na hora, sem esperar a madrugada: aba Actions > "Atualizar vídeos do YouTube" >
+# Run workflow.
+
+name: Atualizar vídeos do YouTube
+
+on:
+  schedule:
+    # 06:10 UTC = 03:10 em Brasília. Fora do horário em que alguém estaria mexendo no repo.
+    - cron: '10 6 * * *'
+  workflow_dispatch:
+
+# Sem isto o push do job é recusado: o token do Actions nasce só de leitura.
+permissions:
+  contents: write
+
+jobs:
+  atualizar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Buscar o feed e converter as capas
+        run: npm run videos
+
+      - name: Comitar se mudou alguma coisa
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add components/videos.json public/assets/yt
+          if git diff --staged --quiet; then
+            echo "Nenhum vídeo novo: nada a fazer."
+          else
+            titulo=$(node -p "require('./components/videos.json').videos[0].titulo")
+            git commit -m "Vídeo novo no canal: $titulo"
+            git push
+          fi

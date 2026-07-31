@@ -1,0 +1,805 @@
+/* ═════════════════════════════════════════════════════════════════════════════
+   André Mei · mar profundo, espuma e sol.
+   Todos os estilos do site vivem aqui: tokens, componentes, responsivo, reveal
+   e prefers-reduced-motion. Sem Tailwind, sem biblioteca de UI.
+   A paleta e as escalas saem do Design System v1 do protótipo.
+   ═════════════════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* ── cores ──────────────────────────────────────────────────────────────── */
+  --mar: #07332c;          /* fundo principal, seções escuras */
+  --mar-claro: #0b443b;    /* variação para alternar seções escuras */
+  --espuma: #f3eee2;       /* fundo claro, texto sobre escuro */
+  --sol: #de8a3f;          /* ação e destaque, nunca em texto longo */
+  --sol-hover: #e9a05f;
+  --tinta: #14231f;        /* texto sobre espuma */
+  --tinta-suave: #3a4a44;
+
+  /* O Sol tem 2,3:1 sobre a Espuma: serve de FUNDO de botão, não de cor de texto
+     em seção clara. Para rótulo sobre fundo claro existe esta versão queimada,
+     que dá 4,8:1 e mantém o mesmo tom. */
+  --sol-texto: #9c561a;
+
+  --espuma-78: rgba(243, 238, 226, 0.78);
+  --espuma-60: rgba(243, 238, 226, 0.6);
+  --espuma-50: rgba(243, 238, 226, 0.5);
+  --espuma-45: rgba(243, 238, 226, 0.45);
+  --linha-escura: rgba(20, 35, 31, 0.14);
+
+  /* ── escala de espaçamento ──────────────────────────────────────────────── */
+  --e1: 8px;
+  --e2: 14px;
+  --e3: 22px;
+  --e4: 36px;
+  --e5: 56px;
+  --e6: 90px;
+  --e7: 110px;
+
+  --margem: 28px;   /* respiro lateral, encolhe no mobile */
+  --largura: 1120px;
+  --raio: 4px;
+  --pilula: 999px;
+
+  color-scheme: dark;
+}
+
+@media (max-width: 640px) {
+  :root {
+    --margem: 18px;
+    --e6: 64px;
+    --e7: 72px;
+  }
+}
+
+/* ── base ─────────────────────────────────────────────────────────────────── */
+
+* { box-sizing: border-box; }
+
+html {
+  -webkit-text-size-adjust: 100%;
+  scroll-behavior: smooth;
+}
+
+body {
+  margin: 0;
+  background: var(--mar);
+  color: var(--tinta);
+  font-family: var(--font-body), system-ui, -apple-system, sans-serif;
+  font-size: 17px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+  /* trava o overflow horizontal que o letreiro e o texto de contorno criariam */
+  overflow-x: hidden;
+}
+
+img { max-width: 100%; height: auto; display: block; }
+
+a { color: var(--sol); text-decoration: none; }
+
+::selection { background: var(--sol); color: var(--mar); }
+
+/* Foco visível global, nas duas cores de fundo. */
+a:focus-visible,
+button:focus-visible,
+[tabindex]:focus-visible {
+  outline: 3px solid var(--sol);
+  outline-offset: 3px;
+  border-radius: var(--raio);
+}
+.claro a:focus-visible,
+.claro button:focus-visible { outline-color: var(--mar); }
+
+/* O <main> recebe foco só para o skip-link funcionar: não é alvo navegável. */
+main:focus { outline: none; }
+
+/* ── skip-link ────────────────────────────────────────────────────────────── */
+
+.pular {
+  position: absolute;
+  left: var(--margem);
+  top: -100px;
+  z-index: 400;
+  background: var(--sol);
+  color: var(--mar);
+  font-weight: 700;
+  font-size: 15px;
+  padding: 12px 20px;
+  border-radius: var(--pilula);
+  transition: top 0.2s;
+}
+.pular:focus { top: 12px; color: var(--mar); }
+
+/* ── tipografia ───────────────────────────────────────────────────────────── */
+
+h1, h2, .display {
+  font-family: var(--font-display), Impact, 'Arial Narrow', sans-serif;
+  font-weight: 400;
+  text-transform: uppercase;
+  letter-spacing: 0.01em;
+  margin: 0;
+}
+h1 { font-size: clamp(56px, 13vw, 190px); line-height: 0.92; }
+h2 { font-size: clamp(34px, 6vw, 84px); line-height: 1; }
+
+p { margin: 0; }
+
+.rotulo {
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--sol);
+}
+/* Sobre a Espuma o Sol não tem contraste: o rótulo escurece. */
+.claro .rotulo { color: var(--sol-texto); }
+
+.corpo {
+  font-size: clamp(16px, 1.1vw, 18px);
+  line-height: 1.65;
+  max-width: 62ch;
+}
+.claro .corpo { color: var(--tinta-suave); }
+.escuro .corpo { color: var(--espuma-78); }
+
+/* ── botões ───────────────────────────────────────────────────────────────── */
+
+.bt {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 48px;
+  padding: 12px 24px;
+  border-radius: var(--pilula);
+  font-weight: 700;
+  font-size: 15px;
+  line-height: 1.2;
+  text-align: center;
+  border: 2px solid transparent;
+  transition: transform 0.2s, background-color 0.2s, color 0.2s;
+}
+.bt:hover { transform: translateY(-2px); }
+
+.bt-sol { background: var(--sol); color: var(--mar); }        /* 5,1:1 */
+.bt-sol:hover { background: var(--sol-hover); color: var(--mar); }
+.bt-mar { background: var(--mar); color: var(--espuma); }
+.bt-mar:hover { background: var(--mar-claro); color: var(--espuma); }
+.bt-contorno { border-color: var(--mar); color: var(--mar); }
+.bt-contorno:hover { background: var(--mar); color: var(--espuma); }
+.bt-grande { min-height: 56px; padding: 14px 32px; font-size: 17px; }
+
+/* ── chips ────────────────────────────────────────────────────────────────── */
+
+.chips { display: flex; flex-wrap: wrap; gap: 10px; }
+.chip {
+  border: 1px solid var(--espuma-50);
+  color: var(--espuma);
+  border-radius: var(--pilula);
+  padding: 8px 16px;
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  line-height: 1.3;
+}
+.chip-sol { border-color: var(--sol); color: var(--sol); }
+@media (max-width: 400px) {
+  .chip { font-size: 12px; padding: 7px 13px; }
+  .chips { gap: 8px; }
+}
+
+/* ── cabeçalho do hero ────────────────────────────────────────────────────── */
+
+.hero {
+  position: relative;
+  overflow: hidden;
+  background: var(--mar);
+  /* 100svh evita o pulo da barra do navegador no celular; 100vh é o fallback. */
+  height: 100vh;
+  height: 100svh;
+  min-height: 560px;
+}
+.hero-foto,
+.hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+.hero-foto { object-fit: cover; }
+.hero-canvas {
+  opacity: 0;
+  transition: opacity 0.6s ease;
+  touch-action: pan-y;
+  pointer-events: none;
+}
+.hero-canvas.ligado { opacity: 1; pointer-events: auto; }
+
+.hero-veu {
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(7, 51, 44, 0.6) 0%,
+    rgba(7, 51, 44, 0) 28%,
+    rgba(7, 51, 44, 0) 54%,
+    rgba(7, 51, 44, 0.86) 100%
+  );
+}
+
+.hero-topo {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 3;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 16px var(--margem);
+}
+
+.marca {
+  font-family: var(--font-display), Impact, sans-serif;
+  font-size: 20px;
+  letter-spacing: 0.06em;
+  color: var(--espuma);
+  text-transform: uppercase;
+  white-space: nowrap;
+}
+
+.hero-nav { display: flex; gap: 22px; align-items: center; }
+.hero-nav a:not(.bt) {
+  color: var(--espuma);
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.04em;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.hero-nav a:not(.bt):hover { color: var(--sol); }
+
+/* No celular só o botão de parcerias fica: Instagram e YouTube já estão no rodapé, e três
+   links em 360px empurram o botão para fora da tela. O :not(.bt) acima também casa com
+   .so-desktop, então esta regra precisa da mesma força para vencer o display:inline-flex. */
+@media (max-width: 640px) {
+  .hero-nav a.so-desktop:not(.bt) { display: none; }
+  .hero-topo { gap: 10px; }
+  .hero-nav .bt { padding: 12px 18px; font-size: 14px; }
+}
+
+.hero-base {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 3;
+  padding: 0 var(--margem) 30px;
+  pointer-events: none;
+}
+.hero-base .chips,
+.hero-base .dica { pointer-events: auto; }
+.hero-base h1 { color: var(--espuma); }
+.hero-base .chips { margin-top: 18px; }
+
+.dica {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 20px;
+  color: rgba(243, 238, 226, 0.75);
+  font-size: 13px;
+  letter-spacing: 0.05em;
+}
+.dica .seta { display: inline-block; animation: pulso 2.2s ease-in-out infinite; }
+@keyframes pulso {
+  0%, 100% { transform: translateY(0); opacity: 0.9; }
+  50% { transform: translateY(8px); opacity: 0.5; }
+}
+
+/* ── letreiro ─────────────────────────────────────────────────────────────── */
+
+.letreiro { background: var(--sol); overflow: hidden; padding: 13px 0; }
+.letreiro-fita { display: flex; width: max-content; animation: corre 22s linear infinite; }
+.letreiro span {
+  font-family: var(--font-display), Impact, sans-serif;
+  font-size: clamp(17px, 2.4vw, 22px);
+  letter-spacing: 0.12em;
+  color: var(--mar);
+  text-transform: uppercase;
+  white-space: nowrap;
+  padding-right: 40px;
+}
+@keyframes corre {
+  from { transform: translateX(0); }
+  to { transform: translateX(-50%); }
+}
+
+/* ── seções ───────────────────────────────────────────────────────────────── */
+
+section { padding: var(--e7) var(--margem); }
+.limite { max-width: var(--largura); margin: 0 auto; }
+.claro { background: var(--espuma); color: var(--tinta); }
+.escuro { background: var(--mar); color: var(--espuma); }
+
+/* Quem é ─────────────────────────────────────────────────────────────────── */
+
+.quem { position: relative; overflow: hidden; }
+.quem-fundo {
+  position: absolute;
+  top: 8px;
+  left: -10px;
+  font-family: var(--font-display), Impact, sans-serif;
+  font-size: clamp(72px, 17vw, 240px);
+  line-height: 1;
+  color: transparent;
+  -webkit-text-stroke: 1px var(--linha-escura);
+  text-transform: uppercase;
+  white-space: nowrap;
+  pointer-events: none;
+  user-select: none;
+}
+.quem-grade {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--e4);
+  align-items: center;
+  position: relative;
+}
+@media (min-width: 860px) {
+  .quem-grade { grid-template-columns: 1fr 1fr; gap: var(--e5); }
+}
+.quem-foto { width: 100%; height: 340px; object-fit: cover; border-radius: var(--raio); }
+@media (min-width: 860px) { .quem-foto { height: 520px; } }
+
+.quem-texto { display: flex; flex-direction: column; gap: var(--e3); }
+.quem-fala {
+  /* blockquote nasce com margem lateral do navegador, que desalinha a coluna */
+  margin: 0;
+  font-family: var(--font-display), Impact, sans-serif;
+  font-weight: 400;
+  font-size: clamp(24px, 3.4vw, 44px);
+  line-height: 1.15;
+  color: var(--tinta);
+  text-transform: uppercase;
+}
+.quem-acoes { display: flex; gap: var(--e2); flex-wrap: wrap; }
+
+/* No celular a foto entra entre a fala e o texto corrido, como no protótipo mobile: a
+   coluna vira um fluxo só e a imagem ocupa a posição 3. */
+@media (max-width: 859px) {
+  .quem-grade { display: flex; flex-direction: column; gap: var(--e3); }
+  .quem-texto { display: contents; }
+  .quem-texto .rotulo { order: 1; }
+  .quem-fala { order: 2; }
+  .quem-foto { order: 3; }
+  .quem-texto .corpo { order: 4; }
+  .quem-acoes { order: 5; margin-top: var(--e1); }
+}
+@media (max-width: 480px) {
+  .quem-acoes { flex-direction: column; }
+  .quem-acoes .bt { width: 100%; }
+}
+
+/* Ultra ──────────────────────────────────────────────────────────────────── */
+
+.ultra h2 { margin-top: 18px; max-width: 16ch; }
+.ultra .corpo { margin-top: var(--e3); }
+
+.numeros {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1px;
+  margin-top: var(--e5);
+  background: rgba(243, 238, 226, 0.14);
+}
+@media (min-width: 760px) { .numeros { grid-template-columns: repeat(4, 1fr); } }
+
+.numero {
+  background: var(--mar);
+  padding: 24px 18px;
+  display: flex;
+  flex-direction: column;
+  gap: var(--e1);
+}
+@media (min-width: 760px) { .numero { padding: 32px 26px; } }
+
+.numero-valor {
+  font-family: var(--font-display), Impact, sans-serif;
+  font-size: clamp(36px, 5vw, 64px);
+  line-height: 1;
+  color: var(--espuma);
+  /* trava a largura enquanto o contador sobe, para o número não empurrar o layout */
+  font-variant-numeric: tabular-nums;
+}
+.numero-valor .un { font-size: 0.42em; color: var(--sol); }
+.numero-rotulo {
+  font-size: clamp(11px, 1.3vw, 13px);
+  font-weight: 600;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--espuma-60);
+  line-height: 1.4;
+}
+
+.prova {
+  display: flex;
+  gap: var(--e4);
+  align-items: flex-start;
+  flex-wrap: wrap;
+  margin-top: var(--e4);
+}
+.prova figure { margin: 0; flex: 0 0 auto; display: flex; flex-direction: column; gap: 10px; }
+.prova img {
+  width: 200px;
+  border-radius: 10px;
+  border: 1px solid rgba(243, 238, 226, 0.22);
+}
+@media (min-width: 760px) { .prova img { width: 220px; } }
+.prova figcaption { font-size: 12px; letter-spacing: 0.04em; color: var(--espuma-50); }
+.prova-nota {
+  flex: 1;
+  min-width: 260px;
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--espuma-60);
+  max-width: 52ch;
+}
+
+/* Galeria ────────────────────────────────────────────────────────────────── */
+
+.galeria { background: var(--mar-claro); padding: var(--e6) 0 var(--e7); }
+.galeria-topo {
+  max-width: var(--largura);
+  margin: 0 auto;
+  padding: 0 var(--margem);
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: var(--e3);
+  flex-wrap: wrap;
+}
+.galeria-topo h2 { color: var(--espuma); }
+.galeria-dica {
+  font-size: 12px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--espuma-60);
+  font-weight: 600;
+}
+.galeria-fita {
+  display: flex;
+  gap: var(--e2);
+  overflow-x: auto;
+  padding: var(--e4) var(--margem) var(--e1);
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(243, 238, 226, 0.35) transparent;
+}
+.galeria-fita::-webkit-scrollbar { height: 6px; }
+.galeria-fita::-webkit-scrollbar-thumb {
+  background: rgba(243, 238, 226, 0.35);
+  border-radius: var(--pilula);
+}
+.galeria-fita img {
+  height: 52vh;
+  min-height: 300px;
+  max-height: 560px;
+  width: auto;
+  border-radius: var(--raio);
+  scroll-snap-align: center;
+  flex: 0 0 auto;
+}
+@media (min-width: 760px) { .galeria-fita img { height: 58vh; min-height: 380px; } }
+
+/* Canal no YouTube ───────────────────────────────────────────────────────── */
+
+.canal { background: var(--mar-claro); }
+.canal-topo { display: flex; flex-direction: column; gap: var(--e3); }
+.canal-topo h2 { color: var(--espuma); }
+.canal-topo .corpo { color: var(--espuma-78); }
+.canal-cabeca {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: var(--e3);
+  flex-wrap: wrap;
+}
+/* O botão do canal acompanha o título no desktop e vai para baixo no celular. */
+.canal-cabeca .bt { flex: 0 0 auto; }
+@media (max-width: 620px) {
+  .canal-cabeca .bt { width: 100%; }
+}
+
+/* Proporção travada em 16:9 pelo aspect-ratio: a capa e o iframe ocupam exatamente o mesmo
+   espaço, então trocar um pelo outro no clique não empurra a página (nada de CLS). */
+.video-quadro {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  width: 100%;
+  border-radius: var(--raio);
+  overflow: hidden;
+  background: var(--mar);
+}
+.video-quadro iframe {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  display: block;
+}
+.video-capa {
+  position: absolute;
+  inset: 0;
+  display: block;
+}
+.video-capa img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.video-capa:hover img { transform: scale(1.03); }
+/* Capa de YouTube costuma ser clara e saturada, e o botão de play sumia em cima dela.
+   Este escurecido no miolo devolve o contraste sem apagar a imagem. */
+.video-capa::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(7, 51, 44, 0.45) 0%, rgba(7, 51, 44, 0) 55%);
+  pointer-events: none;
+}
+
+.video-play {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  width: 68px;
+  height: 48px;
+  pointer-events: none;
+  z-index: 2; /* acima do escurecido do ::after */
+  filter: drop-shadow(0 4px 14px rgba(0, 0, 0, 0.45));
+}
+.video-play svg { width: 100%; height: 100%; display: block; }
+.video-play-fundo {
+  fill: #14231f;
+  fill-opacity: 0.9;
+  transition: fill 0.25s, fill-opacity 0.25s;
+}
+.video-capa:hover .video-play-fundo,
+.video-capa:focus-visible .video-play-fundo {
+  fill: #cc0000;
+  fill-opacity: 1;
+}
+@media (min-width: 760px) {
+  .video-play { width: 84px; height: 60px; }
+}
+
+.video-titulo {
+  margin-top: var(--e2);
+  font-size: clamp(17px, 1.6vw, 21px);
+  font-weight: 700;
+  line-height: 1.35;
+  color: var(--espuma);
+}
+.video-data {
+  margin-top: 4px;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--espuma-60);
+}
+
+/* As prévias: grade de 2 no celular, 4 no desktop. */
+.canal-previas {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: var(--e2);
+  margin-top: var(--e4);
+}
+@media (min-width: 860px) {
+  .canal-previas { grid-template-columns: repeat(4, 1fr); gap: var(--e3); }
+}
+/* O card inteiro é o alvo do clique: o link do título se estica por cima de tudo (capa
+   incluída). Sem isso o alvo era só o texto, com 39px de altura, abaixo dos 44px mínimos. */
+.previa-item { display: flex; flex-direction: column; position: relative; }
+.previa-capa {
+  position: relative;
+  aspect-ratio: 16 / 9;
+  border-radius: var(--raio);
+  overflow: hidden;
+  background: var(--mar);
+  display: block;
+}
+.previa-capa img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.previa-item:hover .previa-capa img { transform: scale(1.05); }
+.previa-capa::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: radial-gradient(ellipse at center, rgba(7, 51, 44, 0.4) 0%, rgba(7, 51, 44, 0) 60%);
+  pointer-events: none;
+}
+.previa-capa .video-play { width: 44px; height: 31px; }
+.previa-titulo {
+  margin-top: 10px;
+  font-size: 14px;
+  font-weight: 600;
+  line-height: 1.4;
+  color: var(--espuma);
+  /* corta em duas linhas: título de YouTube é longo e desalinharia a grade inteira */
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+/* Estica o clique por todo o card. O ::after fica acima da capa, então o toque em qualquer
+   ponto do cartão abre o vídeo, e o alvo passa dos 44px com folga. */
+.previa-titulo::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  z-index: 3;
+}
+.previa-item:focus-within .previa-capa {
+  outline: 3px solid var(--sol);
+  outline-offset: 3px;
+}
+.previa-item:hover .previa-titulo { color: var(--sol); }
+.previa-data {
+  margin-top: 3px;
+  font-size: 12px;
+  color: var(--espuma-60);
+  letter-spacing: 0.03em;
+}
+
+/* Parcerias ──────────────────────────────────────────────────────────────── */
+
+.parcerias .limite {
+  max-width: 900px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e3);
+}
+.parcerias .corpo { max-width: 52ch; }
+.parcerias-acoes {
+  display: flex;
+  gap: var(--e2);
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 100%;
+}
+@media (max-width: 560px) {
+  .parcerias-acoes {
+    flex-direction: column;
+    align-items: stretch;
+    max-width: 360px;
+    margin: 0 auto;
+  }
+}
+/* O e-mail é longo e quebra a pílula em 320px: encolhe antes de estourar. */
+.bt-email { font-size: 15px; word-break: break-word; }
+@media (max-width: 360px) { .bt-email { font-size: 13.5px; padding: 14px 18px; } }
+
+/* ── rodapé ───────────────────────────────────────────────────────────────── */
+
+footer {
+  background: var(--mar);
+  padding: var(--e4) var(--margem) calc(var(--e4) + 70px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--e2);
+  text-align: center;
+}
+@media (min-width: 760px) {
+  footer {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    text-align: left;
+    padding-bottom: var(--e4);
+  }
+}
+.rodape-redes { display: flex; gap: 20px; flex-wrap: wrap; justify-content: center; }
+.rodape-redes a {
+  color: var(--espuma-78);
+  font-size: 14px;
+  font-weight: 600;
+  min-height: 44px;
+  display: inline-flex;
+  align-items: center;
+}
+.rodape-redes a:hover { color: var(--sol); }
+.rodape-lugar { color: var(--espuma-45); font-size: 13px; }
+
+.selo-kyber { font-size: 0.8rem; margin: 0; color: var(--espuma-60); }
+/* Alvo de toque: o texto tem 14px de altura, o link recebe o resto em padding. */
+.selo-kyber a {
+  color: inherit;
+  display: inline-flex;
+  align-items: center;
+  min-height: 44px;
+  padding: 0 4px;
+}
+.selo-kyber a:hover { text-decoration: underline; color: var(--sol); }
+
+/* ── botão flutuante de WhatsApp ──────────────────────────────────────────── */
+
+.wa-fab {
+  position: fixed;
+  right: 20px;
+  bottom: 20px;
+  z-index: 200;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  background: #25d366;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 12px 28px -8px rgba(0, 0, 0, 0.4);
+  transition: transform 0.25s, box-shadow 0.25s;
+}
+.wa-fab svg { width: 32px; height: 32px; }
+.wa-fab:hover { transform: translateY(-3px) scale(1.05); color: #fff; }
+.wa-fab:focus-visible { outline: 3px solid var(--espuma); outline-offset: 3px; }
+@media (max-width: 560px) {
+  .wa-fab { right: 16px; bottom: 16px; width: 54px; height: 54px; }
+}
+
+/* ── cursor prancha, só em ponteiro fino ──────────────────────────────────── */
+
+.cursor {
+  position: fixed;
+  left: 0;
+  top: 0;
+  z-index: 9999;
+  pointer-events: none;
+  display: none;
+  will-change: transform;
+}
+/* O cursor do sistema só some quando o JS confirma que o substituto está desenhando.
+   Sem isso, JS quebrado deixaria a página inteira sem cursor nenhum. */
+@media (pointer: fine) {
+  body.cursor-proprio,
+  body.cursor-proprio a,
+  body.cursor-proprio canvas,
+  body.cursor-proprio button { cursor: none; }
+}
+
+/* ── reveal ───────────────────────────────────────────────────────────────── */
+/* Os estados escondidos só existem sob html.js: sem JavaScript, tudo aparece.
+   O hero NÃO usa data-reveal (apareceria tarde e piora o LCP). */
+
+.js [data-reveal] {
+  opacity: 0;
+  transform: translateY(18px);
+  transition: opacity 0.7s ease, transform 0.7s ease;
+}
+.js [data-reveal].revealed { opacity: 1; transform: none; }
+
+/* ── quem pediu menos movimento ───────────────────────────────────────────── */
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  html { scroll-behavior: auto; }
+  .letreiro-fita { animation: none; width: auto; }
+  .letreiro span:nth-child(2) { display: none; }
+  .dica { display: none; }
+  .js [data-reveal] { opacity: 1; transform: none; }
+}

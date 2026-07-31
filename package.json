@@ -1,0 +1,16 @@
+{
+  "name": "andre-mei",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "videos": "npm i --no-save sharp && node scripts/buscar-videos.mjs",
+    "build": "next build",
+    "start": "npx serve out"
+  },
+  "dependencies": {
+    "next": "14.2.35",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }
+}

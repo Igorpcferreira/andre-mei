@@ -1,0 +1,16 @@
+node_modules/
+.next/
+out/
+
+# Material cru do cliente: foto original de 6 MB, print, briefing. Fica fora do repositório
+# publicado, mas continua no disco para regerar as imagens quando precisar.
+#
+# A barra no INÍCIO prende a regra à raiz do repositório. Sem ela, `assets/` casava também
+# com `public/assets/`, e o site subiria sem nenhuma imagem.
+/originais/
+/assets/
+/reference/
+
+.DS_Store
+Thumbs.db
+.env*.local
