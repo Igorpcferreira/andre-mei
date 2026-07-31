@@ -4,7 +4,8 @@ import JsonLd from '../../components/JsonLd';
 import VideoDestaque from '../../components/VideoDestaque';
 import {
   SITE_URL, NOME, EMAIL, WHATSAPP_NUMBER, INSTAGRAM, INSTAGRAM_SURF, INSTAGRAM_SURF_HANDLE,
-  YOUTUBE, chips, chipDestaque, letreiro, falaAndre, sobre, ultra, heroFoto, sobreFoto,
+  YOUTUBE, chips, chipDestaque, letreiro, falaAndre, sobre, ultra, heroFoto, heroFotoRetrato,
+  sobreFoto,
   galeria, parcerias, srcSet, src, wa,
   youtube, videoDestaque, videosPrevia, haQuantoTempo,
 } from '../../components/content';
@@ -61,20 +62,42 @@ export default function Home() {
       <div className="hero">
         {/* Imagem principal: eager e fetchPriority alto, é o LCP da página. O canvas do
             WebGL desenha por cima dela; se o WebGL não subir, esta foto continua sendo o
-            hero e ninguém percebe falta. Sem data-reveal (piora o LCP). */}
-        <img
-          id="hero-foto"
-          className="hero-foto"
-          src={src(heroFoto)}
-          srcSet={srcSet(heroFoto)}
-          sizes="100vw"
-          width={heroFoto.width}
-          height={heroFoto.height}
-          loading="eager"
-          fetchPriority="high"
-          decoding="async"
-          alt={heroFoto.alt}
-        />
+            hero e ninguém percebe falta. Sem data-reveal (piora o LCP).
+
+            O <picture> troca o enquadramento, não só o tamanho: até 859px entra o recorte
+            retrato, porque aí o hero é mais alto que largo e a foto paisagem teria que ser
+            esticada além da própria resolução para cobrir a tela.
+
+            O `sizes` NÃO é 100vw, e essa era a causa do borrão. Com `object-fit: cover`, se
+            a foto for mais larga em proporção que a tela, quem manda é a ALTURA e a foto é
+            desenhada mais larga que a janela: a paisagem 3:2 numa tela de 390x844 ocupa
+            1266px de largura, não 390. Com `sizes="100vw"` o navegador pedia 1170px, escolhia
+            o arquivo de 1440w e ampliava até 3798px físicos (2,6x). Nenhuma qualidade de webp
+            conserta isso, porque o defeito é ampliação, não compressão.
+
+            Os valores abaixo são a largura renderizada de verdade: `75vh` para a fonte 3:4
+            (altura × 0,75) e `150vh` para a 3:2 (altura × 1,5), com `100vw` quando a tela é
+            larga o bastante para a largura voltar a mandar. */}
+        <picture>
+          <source
+            media="(max-width: 859px)"
+            srcSet={srcSet(heroFotoRetrato)}
+            sizes="(max-aspect-ratio: 3/4) 75vh, 100vw"
+          />
+          <img
+            id="hero-foto"
+            className="hero-foto"
+            src={src(heroFoto)}
+            srcSet={srcSet(heroFoto)}
+            sizes="(max-aspect-ratio: 3/2) 150vh, 100vw"
+            width={heroFoto.width}
+            height={heroFoto.height}
+            loading="eager"
+            fetchPriority="high"
+            decoding="async"
+            alt={heroFoto.alt}
+          />
+        </picture>
         <AguaHero />
         <div className="hero-veu" />
 

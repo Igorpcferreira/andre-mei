@@ -88,13 +88,29 @@ export const ultra = {
 // Todas as fotos são do próprio André. Nome de arquivo descreve a imagem, não o número da
 // câmera, e cada uma tem as larguras que o srcset usa.
 
+// O hero tem DUAS versões da mesma foto, e isso não é capricho: ele ocupa a tela inteira com
+// `object-fit: cover`, e numa tela de celular (retrato, ~0,46 de razão) a versão paisagem
+// precisa ser esticada até ~2,6x para cobrir a altura. Isso borrava a foto no celular, e
+// nenhuma qualidade de webp resolve, porque o problema é upscale, não compressão.
+//
+// A versão `retrato` é um recorte 3:4 do mesmo original, centrado no André. Ela entra por
+// media query no <picture> até 859px, que é onde o hero é mais alto que largo. Acima disso
+// volta a paisagem, que é o enquadramento que a foto pede.
 export const heroFoto = {
   base: '/assets/hero-onda',
-  larguras: [960, 1440, 2000],
+  larguras: [960, 1440, 2000, 2560, 3200],
   padrao: 1440,
   width: 1440,
   height: 960,
   alt: 'André Mei surfando uma onda no litoral norte de São Paulo, com mata verde ao fundo',
+};
+
+export const heroFotoRetrato = {
+  base: '/assets/hero-onda-retrato',
+  larguras: [720, 1080, 1440, 1800, 2160],
+  padrao: 1080,
+  width: 1080,
+  height: 1440,
 };
 
 export const sobreFoto = {

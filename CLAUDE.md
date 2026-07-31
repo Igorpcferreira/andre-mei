@@ -89,6 +89,20 @@ npm run videos   # atualiza a lista e as capas (instala o sharp sem salvar)
   `width`/`height` REAIS, `loading="lazy"` (hero `eager` + `fetchPriority="high"`),
   `decoding="async"`, `alt` descritivo. Converta com sharp (`npm i --no-save sharp`,
   desinstale depois). Nome de arquivo descreve a foto, não o número da câmera.
+- **`sizes` com `object-fit: cover` não é `100vw`.** Se a foto for mais larga em proporção
+  que a tela, quem manda no `cover` é a ALTURA, e a foto é desenhada mais larga que a janela:
+  a paisagem 3:2 numa tela de 390x844 ocupa 1266px, não 390. Com `sizes="100vw"` o navegador
+  escolhia um arquivo pequeno e ampliava 2,6x, e o hero saía borrado no celular. A conta é
+  `altura × razão da foto`: `150vh` para 3:2 e `75vh` para 3:4.
+- **O hero tem dois enquadramentos, não só dois tamanhos.** Até 859px entra o recorte retrato
+  3:4 (`hero-onda-retrato-*`), acima disso a paisagem (`hero-onda-*`), por `<picture>`. Sem
+  isso a foto paisagem teria que ser ampliada além da própria resolução para cobrir uma tela
+  de celular. O `.hero picture` é `display: contents`: quem posiciona é o `<img>`.
+- **Foto em carrossel: defina a LARGURA e deixe a altura sair do `aspect-ratio`.** O
+  contrário (altura fixa + `width: auto`) não preserva proporção dentro de um flex: a largura
+  é resolvida pelo atributo `width` do HTML e depois espremida junto com as irmãs. Foi assim
+  que a galeria chegou a 354x439 numa foto 900x600, com o André achatado. E nada de
+  `max-height` junto com `aspect-ratio`: quando ele morde, a proporção quebra de novo.
 - **A água do hero (`AguaHero.jsx`) é opcional por construção.** A foto é o LCP e vem no
   HTML; o canvas desenha por cima só depois que a textura sobe. Dois detalhes que não devem
   ser desfeitos: a textura **sempre passa por um canvas 2D intermediário** (com a tag de

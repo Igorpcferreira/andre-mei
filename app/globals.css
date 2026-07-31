@@ -200,7 +200,12 @@ p { margin: 0; }
 }
 .hero-foto,
 .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-.hero-foto { object-fit: cover; }
+/* `object-position` um pouco acima do centro: no recorte retrato o André fica no terço
+   superior, e centralizar jogaria o rosto para trás do título. */
+.hero-foto { object-fit: cover; object-position: 50% 42%; }
+/* O <picture> é só um invólucro: quem posiciona é o <img> de dentro. Sem isto ele viraria
+   uma caixa inline no fluxo e empurraria o conteúdo do hero. */
+.hero picture { display: contents; }
 .hero-canvas {
   opacity: 0;
   transition: opacity 0.6s ease;
@@ -322,12 +327,21 @@ section { padding: var(--e7) var(--margem); }
 /* Quem é ─────────────────────────────────────────────────────────────────── */
 
 .quem { position: relative; overflow: hidden; }
+/* "Insólito" de fundo, em contorno. É decoração, mas tem que ser LEGÍVEL: é a palavra que o
+   André escolheu para se descrever, e aparece no texto da seção logo abaixo.
+
+   O `left: -10px` de antes empurrava a palavra para fora e o `overflow: hidden` da seção
+   decepava o I, em toda largura de tela. Agora ela começa na mesma margem do conteúdo, e
+   15vw é a medida em que "Insólito" (8 caracteres da Anton, que é condensada) cabe inteiro
+   até em 360px. Se um dia a palavra mudar, confira este valor: palavra mais longa pede vw
+   menor. */
 .quem-fundo {
   position: absolute;
   top: 8px;
-  left: -10px;
+  left: var(--margem);
+  right: var(--margem);
   font-family: var(--font-display), Impact, sans-serif;
-  font-size: clamp(72px, 17vw, 240px);
+  font-size: min(15vw, 240px);
   line-height: 1;
   color: transparent;
   -webkit-text-stroke: 1px var(--linha-escura);
@@ -446,6 +460,14 @@ section { padding: var(--e7) var(--margem); }
 /* Galeria ────────────────────────────────────────────────────────────────── */
 
 .galeria { background: var(--mar-claro); padding: var(--e6) 0 var(--e7); }
+/* No celular a foto do carrossel é bem mais baixa (a largura da tela é que manda), e aí o
+   rodapé da galeria encostava no topo da seção do canal, que tem o MESMO fundo: os dois
+   respiros viravam um vão contínuo de ~136px, lido como buraco no meio da página em vez de
+   separação entre seções. Aqui a galeria cede o rodapé e o canal cede o topo. */
+@media (max-width: 560px) {
+  .galeria { padding-bottom: var(--e3); }
+  .canal { padding-top: var(--e4); }
+}
 .galeria-topo {
   max-width: var(--largura);
   margin: 0 auto;
@@ -466,6 +488,10 @@ section { padding: var(--e7) var(--margem); }
 }
 .galeria-fita {
   display: flex;
+  /* `align-items: flex-start` para a fita acompanhar a altura da foto. Com o padrão
+     (`stretch`) as fotos seriam esticadas até a altura da fita, que é justamente o tipo de
+     deformação que esta seção não pode ter. */
+  align-items: flex-start;
   gap: var(--e2);
   overflow-x: auto;
   padding: var(--e4) var(--margem) var(--e1);
@@ -479,16 +505,39 @@ section { padding: var(--e7) var(--margem); }
   background: rgba(243, 238, 226, 0.35);
   border-radius: var(--pilula);
 }
+/* A LARGURA é quem define a foto, e a altura sai da proporção. Foi o contrário disso que
+   causou o defeito: com `height` fixa e `width: auto` num contêiner flex, a largura era
+   resolvida pelo atributo `width` do HTML e depois espremida junto com as irmãs, e a foto
+   chegava a 354x439 no celular (razão 0,81 contra 1,5 da foto original).
+
+   Definindo a largura e deixando o `aspect-ratio` calcular a altura, a proporção não tem
+   como quebrar, em nenhuma largura de tela. O `min()` mantém a foto dentro da janela e
+   sempre deixa uma fresta da próxima aparecendo, que é o que sinaliza que o carrossel
+   arrasta. */
 .galeria-fita img {
-  height: 52vh;
-  min-height: 300px;
-  max-height: 560px;
-  width: auto;
+  width: min(84vw, 720px);
+  height: auto;
+  aspect-ratio: 3 / 2;
+  /* Rede de segurança: duas fotos da lista são quadro de vídeo (900x499 e 900x495), e não
+     3:2. Com `cover` elas recortam alguns pixels em vez de deformar. Esticar rosto e corpo
+     é o pior defeito possível numa foto de atleta. */
+  object-fit: cover;
   border-radius: var(--raio);
   scroll-snap-align: center;
   flex: 0 0 auto;
 }
-@media (min-width: 760px) { .galeria-fita img { height: 58vh; min-height: 380px; } }
+@media (max-width: 560px) {
+  /* A foto ficou mais baixa aqui, e o respiro de cima, pensado para a foto alta de antes,
+     sobrava e abria um vão embaixo da fita. */
+  .galeria-fita { padding-top: var(--e2); }
+}
+/* Em tela larga a foto cresce. O limite continua sendo só a LARGURA: um `max-height` aqui
+   voltaria a brigar com o `aspect-ratio` e a quebrar a proporção, que é exatamente o defeito
+   que esta regra existe para evitar. O `min(...)` com vh mantém a foto dentro da janela
+   traduzindo a altura desejada em largura (altura × 1,5), sem restringir a altura direto. */
+@media (min-width: 760px) {
+  .galeria-fita img { width: min(62vw, 93vh, 840px); }
+}
 
 /* Canal no YouTube ───────────────────────────────────────────────────────── */
 
