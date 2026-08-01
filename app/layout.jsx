@@ -46,9 +46,9 @@ export const metadata = {
   title: TITULO,
   description: DESCRICAO,
   alternates: { canonical: '/' },
-  // PENDENTE: o noindex sai quando o domínio definitivo estiver no ar. Enquanto o site não
-  // tem endereço próprio, ele não pode ser indexado em lugar nenhum.
-  robots: { index: false, follow: true },
+  // Liberado em 01/08, quando o andremei.com.br entrou no ar. Antes disso o site ficou com
+  // noindex de propósito, porque o endereço era provisório da Vercel.
+  robots: { index: true, follow: true },
   openGraph: {
     title: TITULO,
     description: DESCRICAO_CURTA,
