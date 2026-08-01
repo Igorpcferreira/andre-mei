@@ -2,7 +2,7 @@
 // inteiro (não faz merge): declarar na mão perde siteName, locale e type, e sem twitter a
 // página herda o card da home. Use sempre este helper.
 
-const OG = { url: '/assets/og.jpg', width: 1200, height: 630, alt: 'André Mei surfando uma onda no litoral norte de São Paulo' };
+const OG = { url: '/assets/og.jpg', width: 1200, height: 630, alt: 'Andre Mei surfando uma onda no litoral norte de São Paulo' };
 
 export function pageMeta({ title, description, path }) {
   return {
@@ -13,7 +13,7 @@ export function pageMeta({ title, description, path }) {
       title,
       description,
       url: path,
-      siteName: 'André Mei',
+      siteName: 'Andre Mei',
       locale: 'pt_BR',
       type: 'website',
       images: [OG],

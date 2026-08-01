@@ -1,6 +1,6 @@
-# André Mei
+# Andre Mei
 
-Site lifestyle do André Mei, surfista e ultramaratonista do litoral norte de São Paulo.
+Site lifestyle do Andre Mei, surfista e ultramaratonista do litoral norte de São Paulo.
 
 Feito a partir do protótipo em `reference/Protótipo site André Mei/` (design system, versão
 desktop e versão mobile).
@@ -34,7 +34,7 @@ components/
   CursorPrancha.jsx   # cursor de prancha, só no desktop
   Reveal.jsx          # entrada das seções ao rolar
 public/assets/        # webp em várias larguras, geradas dos originais
-originais/            # fotos cruas do André, fora do repositório publicado
+originais/            # fotos cruas do Andre, fora do repositório publicado
 reference/            # o protótipo que originou o site
 ```
 
@@ -47,7 +47,7 @@ Fonte única de textos, números, fotos e contatos. Não espalhe conteúdo pelas
 
 ## O que precisa acontecer antes de publicar
 
-1. **Registrar o domínio**, no CPF do André, com o contato administrativo no e-mail dele. O
+1. **Registrar o domínio**, no CPF do Andre, com o contato administrativo no e-mail dele. O
    site está escrito para `andremei.com.br`, que **ainda não foi confirmado como disponível**
    no registro.br. Se o nome mudar, troque só em `SITE_URL` no `content.jsx`: metadata,
    robots, sitemap e JSON-LD leem de lá.
@@ -154,15 +154,15 @@ Lighthouse, que depende do site no ar.
 
 ## Fatos e limites do conteúdo
 
-Os números da ultramaratona vêm do print do Strava que o André mandou, em
+Os números da ultramaratona vêm do print do Strava que o Andre mandou, em
 `originais/evidencia-ultramaratonista-andre-mei.png`. O site diz que a prova de 106 km **não
 foi concluída** e que ele parou no km 53: isso é proposital e não deve ser suavizado. A nota
 explicando a diferença entre os 73,11 km do app e os 53 km no chão existe porque sem ela os
 dois números se contradizem.
 
 O chip **Guinness Book** entrou porque o Igor confirmou. A menção original vinha só da bio
-das redes do André, sem registro público encontrado.
+das redes do Andre, sem registro público encontrado.
 
 O site **não promete resultado** para marca nenhuma, e não tem número de seguidores, alcance
-ou métrica de audiência. Se for para entrar algo assim, precisa vir do André com o número
+ou métrica de audiência. Se for para entrar algo assim, precisa vir do Andre com o número
 real.

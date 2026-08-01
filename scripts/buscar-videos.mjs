@@ -1,4 +1,4 @@
-// Lê o feed público do canal do André e grava components/videos.json, mais as capas em
+// Lê o feed público do canal do Andre e grava components/videos.json, mais as capas em
 // public/assets/yt/.
 //
 //   npm run videos      (instala o sharp sem salvar, busca o feed, converte as capas)
@@ -11,7 +11,7 @@
 // Para o site acompanhar o canal sozinho: Vercel > Settings > Cron Jobs não serve (ele
 // chama URL, não rebuilda). O caminho é um workflow agendado no GitHub que roda este script,
 // comita o que mudou e deixa o push disparar o deploy. Enquanto isso não existir, rode
-// `npm run videos` quando o André publicar vídeo novo, e comite.
+// `npm run videos` quando o Andre publicar vídeo novo, e comite.
 //
 // Por que o feed RSS e não a API do YouTube: o feed é público, não pede chave, não tem cota
 // e devolve os 15 vídeos mais recentes, que é bem mais do que a seção usa. Chave de API
@@ -38,7 +38,7 @@ const um = (texto, re) => (texto.match(re) ?? [])[1] ?? '';
 
 // O título vem cru do YouTube: entidade XML escapada e, às vezes, travessão. O travessão é
 // proibido em qualquer lugar visível do site (regra nº 1 da casa), então vira ponto mediano.
-// Emoji fica: quem usou primeiro foi o próprio André, no título dele.
+// Emoji fica: quem usou primeiro foi o próprio Andre, no título dele.
 function limparTitulo(bruto) {
   return bruto
     .replace(/&amp;/g, '&')

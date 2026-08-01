@@ -1,7 +1,7 @@
 import Link from 'next/link';
 
 export const metadata = {
-  title: 'Página não encontrada · André Mei',
+  title: 'Página não encontrada · Andre Mei',
   robots: { index: false, follow: false },
 };
 

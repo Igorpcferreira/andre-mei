@@ -1,4 +1,4 @@
-# CLAUDE.md · Site do André Mei
+# CLAUDE.md · Site do Andre Mei
 
 Instruções para qualquer agente trabalhando neste repositório. Leia antes de editar.
 
@@ -10,11 +10,19 @@ Instruções para qualquer agente trabalhando neste repositório. Leia antes de 
 
 ## O que é
 
-Site lifestyle do **André Mei**, surfista e ultramaratonista de 17 anos do litoral norte de
+Site lifestyle do **Andre Mei** (o nome dele é **sem acento**: nunca escreva "André"),
+surfista e ultramaratonista adolescente do litoral norte de
 São Paulo. **Não é loja e não é portfólio de serviço:** a única conversão é o contato para
 parceria, por WhatsApp ou e-mail. Não adicione formulário, carrinho, newsletter nem chatbot.
 
 O protótipo que originou o site (design system, desktop e mobile) fica em `reference/`.
+
+**Cuidado ao copiar de `reference/`:** aquele material é de antes das correções de 01/08 e
+está desatualizado em dois pontos que o Andre pediu para mudar. Ele escreve o nome **com**
+acento, e linka o **`@andremeisurf` cinco vezes**, que é a conta privada e não pode voltar ao
+site (nem como link, nem no rodapé, nem no `sameAs`). A pasta é ignorada pelo git e não vai
+ao ar, mas é de lá que se copia conteúdo. Confira contra o `components/content.jsx`, que é a
+fonte de verdade.
 
 ## Stack
 
@@ -46,11 +54,27 @@ Fonte única de textos, números, fotos e contatos. Não espalhe conteúdo pelas
   ("atleta de excelência", "referência no cenário").
 - **Não prometa resultado** para marca nenhuma: nem alcance, nem retorno, nem pódio.
 - **Não invente número.** Não há métrica de audiência confirmada: se entrar seguidor,
-  alcance ou visualização, tem que vir do André com o número real.
+  alcance ou visualização, tem que vir do Andre com o número real.
 - **A prova de 106 km NÃO foi concluída, e o site diz isso.** Ele parou no km 53. Não
   suavize, não escreva "completou", não tire a nota que explica a diferença entre os
   73,11 km do Strava e os 53 km no chão. Esconder isso é o principal risco do texto.
-- Fala do André entre aspas, em primeira pessoa, só quando for citação real dele.
+- Fala do Andre entre aspas, em primeira pessoa, só quando for citação real dele.
+- **Nunca escreva a idade dele na mão.** Ela sai de `NASCIMENTO` (06/01/2009) pela função
+  `idadeEm()`, em `content.jsx`, e entra por `chipsCom()` e `sobreCom()`. Antes era "17 anos"
+  fixo em cinco lugares, e viraria mentira no primeiro 06/01. O "aos 16 anos" da seção da
+  ultramaratona é outra coisa, e continua fixo: é quando a prova aconteceu, fato com data.
+  O workflow de vídeos roda toda madrugada, então o número se acerta sozinho no primeiro
+  build depois do aniversário.
+
+## Seção "Rumo ao topo do mundo"
+
+Os picos que o Andre ainda quer conhecer, com a promessa de registrar tudo no canal. **Nada
+ali aconteceu**, e o texto e o desenho existem para dizer isso: os marcadores são círculos
+vazados (não check de lista feita) e a legenda diz "nenhum riscado ainda".
+
+Se for mexer: não escreva no passado, não escreva "conquistando", e não invente patrocínio,
+convite ou prova marcada. Se um dia ele for a um dos lugares, aí vira registro, com vídeo e
+data.
 
 ## Seção do YouTube
 
@@ -74,7 +98,7 @@ npm run videos   # atualiza a lista e as capas (instala o sharp sem salvar)
   quem só passou pelo site (resolve a LGPD sem banner). Verificado: zero domínio externo
   antes do clique. Use `youtube-nocookie.com`, não `youtube.com`.
 - **Título de vídeo vem cru do YouTube.** O script troca travessão por `·` (regra nº 1) e
-  desescapa entidade XML. **Emoji fica**: quem usou primeiro foi o próprio André, no título
+  desescapa entidade XML. **Emoji fica**: quem usou primeiro foi o próprio Andre, no título
   dele.
 - **As prévias não abrem player no site**, levam para o YouTube: é o destino que a seção
   existe para alimentar. O card inteiro é clicável (o link do título se estica com
@@ -94,6 +118,12 @@ npm run videos   # atualiza a lista e as capas (instala o sharp sem salvar)
   a paisagem 3:2 numa tela de 390x844 ocupa 1266px, não 390. Com `sizes="100vw"` o navegador
   escolhia um arquivo pequeno e ampliava 2,6x, e o hero saía borrado no celular. A conta é
   `altura × razão da foto`: `150vh` para 3:2 e `75vh` para 3:4.
+- **O `object-position` do hero muda por proporção de tela, e isso não é enfeite.** Com
+  `cover` e altura de 100svh, quanto mais larga a tela, mais a foto 3:2 sobra em altura e
+  mais o corte come em cima. Com o valor fixo de 42% a cabeça do Andre saía do quadro em
+  ultrawide de 34" (~21:9), e ficava apertada já em 16:9. Os degraus em `globals.css`
+  (8/5 → 34%, 16/9 → 28%, 2/1 → 22%, 12/5 → 18%) seguem essa curva. Se for mexer, teste em
+  21:9 e não só na tela em que você está: no notebook o defeito não aparece.
 - **O hero tem dois enquadramentos, não só dois tamanhos.** Até 859px entra o recorte retrato
   3:4 (`hero-onda-retrato-*`), acima disso a paisagem (`hero-onda-*`), por `<picture>`. Sem
   isso a foto paisagem teria que ser ampliada além da própria resolução para cobrir uma tela
@@ -101,7 +131,7 @@ npm run videos   # atualiza a lista e as capas (instala o sharp sem salvar)
 - **Foto em carrossel: defina a LARGURA e deixe a altura sair do `aspect-ratio`.** O
   contrário (altura fixa + `width: auto`) não preserva proporção dentro de um flex: a largura
   é resolvida pelo atributo `width` do HTML e depois espremida junto com as irmãs. Foi assim
-  que a galeria chegou a 354x439 numa foto 900x600, com o André achatado. E nada de
+  que a galeria chegou a 354x439 numa foto 900x600, com o Andre achatado. E nada de
   `max-height` junto com `aspect-ratio`: quando ele morde, a proporção quebra de novo.
 - **A água do hero (`AguaHero.jsx`) é opcional por construção.** A foto é o LCP e vem no
   HTML; o canvas desenha por cima só depois que a textura sobe. Dois detalhes que não devem
@@ -133,7 +163,7 @@ npm run videos   # atualiza a lista e as capas (instala o sharp sem salvar)
 ## Domínio e deploy
 
 - **PENDENTE:** `andremei.com.br` ainda **não foi confirmado como disponível** no registro.br.
-  O domínio vai no **CPF do André**, com o contato administrativo no e-mail dele.
+  O domínio vai no **CPF do Andre**, com o contato administrativo no e-mail dele.
 - `SITE_URL` vive em `components/content.jsx` e alimenta metadata, robots, sitemap e JSON-LD.
   Se o domínio mudar, troque só lá.
 - **O `noindex` está ligado de propósito** em `app/layout.jsx`, e só sai quando o domínio

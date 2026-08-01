@@ -1,5 +1,5 @@
 /* ═════════════════════════════════════════════════════════════════════════════
-   André Mei · mar profundo, espuma e sol.
+   Andre Mei · mar profundo, espuma e sol.
    Todos os estilos do site vivem aqui: tokens, componentes, responsivo, reveal
    e prefers-reduced-motion. Sem Tailwind, sem biblioteca de UI.
    A paleta e as escalas saem do Design System v1 do protótipo.
@@ -165,6 +165,10 @@ p { margin: 0; }
 .bt-mar:hover { background: var(--mar-claro); color: var(--espuma); }
 .bt-contorno { border-color: var(--mar); color: var(--mar); }
 .bt-contorno:hover { background: var(--mar); color: var(--espuma); }
+/* O contorno padrão é escuro, para as seções de fundo Espuma. Em seção escura ele ficaria
+   invisível (texto --mar sobre fundo --mar), então a cor inverte. */
+.escuro .bt-contorno { border-color: var(--espuma-50); color: var(--espuma); }
+.escuro .bt-contorno:hover { background: var(--espuma); color: var(--mar); }
 .bt-grande { min-height: 56px; padding: 14px 32px; font-size: 17px; }
 
 /* ── chips ────────────────────────────────────────────────────────────────── */
@@ -200,9 +204,39 @@ p { margin: 0; }
 }
 .hero-foto,
 .hero-canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
-/* `object-position` um pouco acima do centro: no recorte retrato o André fica no terço
-   superior, e centralizar jogaria o rosto para trás do título. */
+/* `object-position` um pouco acima do centro: no recorte retrato o Andre fica no terço
+   superior, e centralizar jogaria o rosto para trás do título.
+
+   MAS ele não pode ser um valor só. Com `object-fit: cover` numa altura de 100svh, quanto
+   mais larga a tela, mais a foto 3:2 sobra em altura e mais o corte come em cima: numa
+   ultrawide de 34" (~21:9) o enquadramento fixo em 42% cortava a cabeça do Andre fora. Em
+   notebook (~16:10) o mesmo 42% está certo.
+
+   A conta: o excedente vertical é proporcional a `largura da tela ÷ 1,5` (a razão da foto)
+   menos a altura. Quanto maior a sobra, mais alto o ponto de ancoragem tem que subir para o
+   rosto continuar no quadro. Os degraus abaixo seguem essa curva, por proporção de tela e
+   não por largura em pixels: é a proporção que decide o corte, e é ela que muda de um
+   monitor para o outro. */
 .hero-foto { object-fit: cover; object-position: 50% 42%; }
+
+/* Da paisagem comum de notebook (16:10, 1,6) para cima, o corte vertical começa a apertar. */
+@media (min-aspect-ratio: 8/5) {
+  .hero-foto { object-position: 50% 34%; }
+}
+/* 16:9 cheio: monitor de 23" a 27". */
+@media (min-aspect-ratio: 16/9) {
+  .hero-foto { object-position: 50% 28%; }
+}
+/* 2:1 e além: aqui mora a ultrawide de 34" (21:9 ≈ 2,33), onde a cabeça sumia. */
+@media (min-aspect-ratio: 2/1) {
+  .hero-foto { object-position: 50% 22%; }
+}
+/* Super ultrawide (32:9, monitor duplo). Passando disso o `cover` amplia tanto que o
+   enquadramento vira recorte de recorte: 18% é o limite antes de encostar no topo da foto. */
+@media (min-aspect-ratio: 12/5) {
+  .hero-foto { object-position: 50% 18%; }
+}
+
 /* O <picture> é só um invólucro: quem posiciona é o <img> de dentro. Sem isto ele viraria
    uma caixa inline no fluxo e empurraria o conteúdo do hero. */
 .hero picture { display: contents; }
@@ -328,7 +362,7 @@ section { padding: var(--e7) var(--margem); }
 
 .quem { position: relative; overflow: hidden; }
 /* "Insólito" de fundo, em contorno. É decoração, mas tem que ser LEGÍVEL: é a palavra que o
-   André escolheu para se descrever, e aparece no texto da seção logo abaixo.
+   Andre escolheu para se descrever, e aparece no texto da seção logo abaixo.
 
    O `left: -10px` de antes empurrava a palavra para fora e o `overflow: hidden` da seção
    decepava o I, em toda largura de tela. Agora ela começa na mesma margem do conteúdo, e
@@ -706,6 +740,120 @@ section { padding: var(--e7) var(--margem); }
   letter-spacing: 0.03em;
 }
 
+/* ── rumo ao topo do mundo ────────────────────────────────────────────────── */
+/* Os picos que o Andre ainda quer conhecer. Nada aqui é conquista, e o desenho segue essa
+   ideia: os marcadores são círculos VAZIOS, de contorno, sem preenchimento. É o oposto do
+   check de lista feita, e é o que impede a seção de parecer currículo. */
+
+/* A galeria logo acima já é `--mar-claro`: sem um fundo próprio, as duas escuras se
+   emendariam num bloco só. O `--mar` devolve a separação entre as seções. */
+.rumo { background: var(--mar); }
+.rumo h2 { margin-top: 18px; max-width: 18ch; }
+.rumo .corpo { margin-top: var(--e3); max-width: 60ch; }
+
+.rumo-mapa {
+  margin-top: var(--e5);
+  display: grid;
+  gap: var(--e4);
+  align-items: center;
+}
+@media (min-width: 860px) {
+  .rumo-mapa { grid-template-columns: minmax(0, 260px) minmax(0, 1fr); gap: var(--e5); }
+}
+
+/* Rosa dos ventos: dois anéis e uma agulha, tudo em CSS. Nenhuma imagem, nenhum SVG externo
+   e nenhum byte a mais no carregamento. É decoração pura (aria-hidden no JSX): a informação
+   está na lista ao lado. */
+.rumo-rosa {
+  position: relative;
+  width: min(220px, 62vw);
+  aspect-ratio: 1;
+  margin: 0 auto;
+  display: grid;
+  place-items: center;
+}
+.rumo-rosa-anel {
+  position: absolute;
+  inset: 0;
+  border: 1px solid var(--espuma-45);
+  border-radius: 50%;
+}
+.rumo-rosa-anel-2 { inset: 18%; border-style: dashed; opacity: 0.6; }
+/* A agulha aponta para o norte e gira devagar, como bússola procurando o rumo. */
+.rumo-rosa-agulha {
+  position: absolute;
+  width: 3px;
+  height: 46%;
+  bottom: 50%;
+  transform-origin: 50% 100%;
+  background: linear-gradient(180deg, var(--sol) 0%, rgba(222, 138, 63, 0) 100%);
+  border-radius: 3px;
+  animation: bussola 9s ease-in-out infinite;
+}
+.rumo-rosa-n {
+  position: absolute;
+  top: 8%;
+  font-family: var(--font-display), Impact, sans-serif;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  color: var(--espuma-60);
+}
+/* Vai e volta em torno do norte, sem nunca dar a volta completa: bússola procurando, não
+   ponteiro de relógio. */
+@keyframes bussola {
+  0%, 100% { transform: rotate(-14deg); }
+  50% { transform: rotate(16deg); }
+}
+
+.rumo-lista {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: grid;
+  gap: 2px;
+}
+@media (min-width: 560px) {
+  .rumo-lista { grid-template-columns: 1fr 1fr; gap: 2px var(--e4); }
+}
+.rumo-item {
+  display: flex;
+  align-items: baseline;
+  gap: 12px;
+  padding: 13px 0;
+  border-bottom: 1px solid rgba(243, 238, 226, 0.14);
+}
+/* Círculo vazado: destino, não conquista. */
+.rumo-ponto {
+  flex: 0 0 auto;
+  width: 9px;
+  height: 9px;
+  border: 1.5px solid var(--sol);
+  border-radius: 50%;
+  transform: translateY(-1px);
+}
+.rumo-pico {
+  font-family: var(--font-display), Impact, sans-serif;
+  font-size: clamp(19px, 2.4vw, 25px);
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--espuma);
+  line-height: 1.1;
+}
+.rumo-lugar {
+  margin-left: auto;
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  color: var(--espuma-60);
+  text-align: right;
+}
+.rumo-legenda {
+  margin-top: var(--e3);
+  font-size: 14px;
+  color: var(--espuma-78);
+  font-style: italic;
+}
+.rumo-acoes { display: flex; gap: var(--e2); flex-wrap: wrap; margin-top: var(--e4); }
+
 /* Parcerias ──────────────────────────────────────────────────────────────── */
 
 .parcerias .limite {
@@ -850,5 +998,7 @@ footer {
   .letreiro-fita { animation: none; width: auto; }
   .letreiro span:nth-child(2) { display: none; }
   .dica { display: none; }
+  /* Sem a animação a agulha congelaria no primeiro quadro, torta. Aponta o norte e pronto. */
+  .rumo-rosa-agulha { animation: none; transform: rotate(0deg); }
   .js [data-reveal] { opacity: 1; transform: none; }
 }

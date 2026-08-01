@@ -3,26 +3,32 @@ import Contador from '../../components/Contador';
 import JsonLd from '../../components/JsonLd';
 import VideoDestaque from '../../components/VideoDestaque';
 import {
-  SITE_URL, NOME, EMAIL, WHATSAPP_NUMBER, INSTAGRAM, INSTAGRAM_SURF, INSTAGRAM_SURF_HANDLE,
-  YOUTUBE, chips, chipDestaque, letreiro, falaAndre, sobre, ultra, heroFoto, heroFotoRetrato,
-  sobreFoto,
-  galeria, parcerias, srcSet, src, wa,
+  SITE_URL, NOME, EMAIL, WHATSAPP_NUMBER, INSTAGRAM, INSTAGRAM_HANDLE,
+  YOUTUBE, chipsCom, chipDestaque, letreiro, falaAndre, sobreCom, idadeEm, ultra, heroFoto,
+  heroFotoRetrato, sobreFoto,
+  galeria, rumo, parcerias, srcSet, src, wa,
   youtube, videoDestaque, videosPrevia, haQuantoTempo,
 } from '../../components/content';
 
-// Data de referência do "há quanto tempo", carimbada no build. Precisa ser um valor fixo, e
-// não `new Date()` dentro do componente: o site é export estático, então o HTML é gerado uma
-// vez e o texto tem que ser o mesmo no servidor e no navegador, senão o React acusa erro de
-// hidratação. Fica desatualizado entre um deploy e outro, e tudo bem: a data exata do vídeo
-// está no <time dateTime>, que é o que máquina lê.
+// Data de referência do "há quanto tempo" e da idade do Andre, carimbada no build. Precisa
+// ser um valor fixo, e não `new Date()` dentro do componente: o site é export estático,
+// então o HTML é gerado uma vez e o texto tem que ser o mesmo no servidor e no navegador,
+// senão o React acusa erro de hidratação. Fica desatualizado entre um deploy e outro, e tudo
+// bem: a data exata do vídeo está no <time dateTime>, que é o que máquina lê.
+//
+// A idade só muda em 06/01, e o workflow de vídeos (.github/workflows/videos.yml) roda toda
+// madrugada, então o número se acerta sozinho no primeiro build depois do aniversário.
 const HOJE = new Date().toISOString().slice(0, 10);
+const IDADE = idadeEm(HOJE);
+const chips = chipsCom(HOJE);
+const sobre = sobreCom(HOJE);
 
 const pessoa = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: NOME,
   alternateName: 'Andremeii',
-  description: 'Surfista e ultramaratonista de 17 anos, do litoral norte de São Paulo.',
+  description: `Surfista e ultramaratonista de ${IDADE} anos, do litoral norte de São Paulo.`,
   image: `${SITE_URL}/assets/og.jpg`,
   url: `${SITE_URL}/`,
   email: EMAIL,
@@ -31,7 +37,8 @@ const pessoa = {
     '@type': 'Place',
     address: { '@type': 'PostalAddress', addressRegion: 'SP', addressCountry: 'BR' },
   },
-  sameAs: [INSTAGRAM, INSTAGRAM_SURF, YOUTUBE],
+  // Só as contas públicas: o @andremeisurf é privado e saiu do site a pedido do Andre.
+  sameAs: [INSTAGRAM, YOUTUBE],
 };
 
 // VideoObject do vídeo em destaque. Só campos que vêm do feed: nada de duração, contagem de
@@ -155,15 +162,15 @@ export default function Home() {
             data-reveal
           />
           <div className="quem-texto">
-            <p className="rotulo">Quem é o André</p>
+            <p className="rotulo">Quem é o Andre</p>
             <blockquote className="quem-fala">&quot;{falaAndre}&quot;</blockquote>
             <p className="corpo">{sobre}</p>
             <div className="quem-acoes">
               <a className="bt bt-mar" href={YOUTUBE} target="_blank" rel="noopener">
                 Ver o canal no YouTube
               </a>
-              <a className="bt bt-contorno" href={INSTAGRAM_SURF} target="_blank" rel="noopener">
-                {INSTAGRAM_SURF_HANDLE}
+              <a className="bt bt-contorno" href={INSTAGRAM} target="_blank" rel="noopener">
+                {INSTAGRAM_HANDLE}
               </a>
             </div>
           </div>
@@ -221,7 +228,7 @@ export default function Home() {
           className="galeria-fita"
           tabIndex={0}
           role="group"
-          aria-label="Fotos do André surfando, role para o lado"
+          aria-label="Fotos do Andre surfando, role para o lado"
         >
           {galeria.map((f) => (
             <img
@@ -236,6 +243,49 @@ export default function Home() {
               alt={f.alt}
             />
           ))}
+        </div>
+      </section>
+
+      {/* O plano de rodar o mundo. Tudo aqui é intenção declarada, não histórico: os
+          marcadores nascem vazios de propósito, e a legenda diz isso com todas as letras.
+          Se um dia virar viagem feita, aí muda o conteúdo e entra vídeo com data. */}
+      <section className="rumo escuro">
+        <div className="limite">
+          <p className="rotulo">{rumo.rotulo}</p>
+          <h2>{rumo.titulo}</h2>
+          <p className="corpo">{rumo.texto}</p>
+
+          <div className="rumo-mapa" data-reveal>
+            {/* A rosa dos ventos é decoração: a informação toda está na lista ao lado, que
+                é texto de verdade e é o que o leitor de tela anuncia. */}
+            <div className="rumo-rosa" aria-hidden="true">
+              <span className="rumo-rosa-anel" />
+              <span className="rumo-rosa-anel rumo-rosa-anel-2" />
+              <span className="rumo-rosa-agulha" />
+              <span className="rumo-rosa-n">N</span>
+            </div>
+
+            <ol className="rumo-lista">
+              {rumo.destinos.map((d) => (
+                <li className="rumo-item" key={d.pico}>
+                  <span className="rumo-ponto" aria-hidden="true" />
+                  <span className="rumo-pico">{d.pico}</span>
+                  <span className="rumo-lugar">{d.lugar}</span>
+                </li>
+              ))}
+            </ol>
+          </div>
+
+          <p className="rumo-legenda">{rumo.legenda}</p>
+
+          <div className="rumo-acoes">
+            <a className="bt bt-sol" href={YOUTUBE} target="_blank" rel="noopener">
+              {rumo.chamada}
+            </a>
+            <a className="bt bt-contorno" href={INSTAGRAM} target="_blank" rel="noopener">
+              {rumo.chamadaInsta}
+            </a>
+          </div>
         </div>
       </section>
 

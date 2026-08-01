@@ -1,6 +1,6 @@
 import localFont from 'next/font/local';
 import './globals.css';
-import { SITE_URL, NOME, RESUMO } from '../components/content';
+import { SITE_URL, NOME, RESUMO, idadeEm } from '../components/content';
 
 // Fontes self-hospedadas: nenhuma requisição a terceiro. Os woff2 estão commitados em
 // app/fonts/, e cada família traz os subconjuntos latin e latin-ext, que é o que o
@@ -25,16 +25,20 @@ const archivo = localFont({
   fallback: ['system-ui', 'sans-serif'],
 });
 
+// A idade sai da data de nascimento, carimbada no build (mesmo motivo do HOJE da página:
+// export estático não pode calcular data em tempo de execução). Não escreva o número na mão.
+const IDADE = idadeEm(new Date().toISOString().slice(0, 10));
+
 const TITULO = `${NOME} · ${RESUMO}`;
 const DESCRICAO =
-  'André Mei, 17 anos, vive no litoral norte de São Paulo entre o surfe e a trilha. Surfista, ultramaratonista e Guinness Book. Parcerias pelo WhatsApp.';
+  `Andre Mei, ${IDADE} anos, vive no litoral norte de São Paulo entre o surfe e a trilha. Surfista, ultramaratonista e Guinness Book. Parcerias pelo WhatsApp.`;
 const DESCRICAO_CURTA =
-  '17 anos, litoral norte de São Paulo. Entre o mar e a trilha, rumo ao topo do mundo.';
+  `${IDADE} anos, litoral norte de São Paulo. Entre o mar e a trilha, rumo ao topo do mundo.`;
 const OG = {
   url: '/assets/og.jpg',
   width: 1200,
   height: 630,
-  alt: 'André Mei surfando uma onda no litoral norte de São Paulo',
+  alt: 'Andre Mei surfando uma onda no litoral norte de São Paulo',
 };
 
 export const metadata = {
