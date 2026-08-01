@@ -162,12 +162,11 @@ npm run videos   # atualiza a lista e as capas (instala o sharp sem salvar)
 
 ## Domínio e deploy
 
-- **PENDENTE:** `andremei.com.br` ainda **não foi confirmado como disponível** no registro.br.
-  O domínio vai no **CPF do Andre**, com o contato administrativo no e-mail dele.
+- **No ar em `https://www.andremei.com.br`**, domínio definitivo, desde 01/08.
 - `SITE_URL` vive em `components/content.jsx` e alimenta metadata, robots, sitemap e JSON-LD.
   Se o domínio mudar, troque só lá.
-- **O `noindex` está ligado de propósito** em `app/layout.jsx`, e só sai quando o domínio
-  definitivo estiver no ar.
+- **O `noindex` saiu em 01/08**, junto com a entrada do domínio. O site é indexável, e
+  `app/layout.jsx` traz `robots: { index: true, follow: true }`. Não religue sem motivo.
 - Repositório: `https://github.com/Igorpcferreira/andre-mei`. Hospedagem alvo: Vercel, preset
   **Next.js** (ela acha o `out/` sozinha).
 - O `npm audit` acusa vulnerabilidades no Next 14.2.35: todas são server-side e **não se
