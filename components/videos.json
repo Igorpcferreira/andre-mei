@@ -2,6 +2,15 @@
   "canal": "UC109LgXZ9ThI0BNtslQgAiQ",
   "videos": [
     {
+      "id": "qlrVm9il7pY",
+      "titulo": "Amazônia Dia 3 | O Fim da Selva 🌿",
+      "publicado": "2026-08-04",
+      "url": "https://www.youtube.com/watch?v=qlrVm9il7pY",
+      "capa": "/assets/yt/qlrVm9il7pY.webp",
+      "capaLargura": 960,
+      "capaAltura": 540
+    },
+    {
       "id": "xed3lV0cTlc",
       "titulo": "DIA 2 NA AMAZÔNIA: Acampamento no Meio da Selva! 🌳",
       "publicado": "2026-07-28",
@@ -34,15 +43,6 @@
       "publicado": "2026-06-27",
       "url": "https://www.youtube.com/watch?v=CJpNlFBaOm0",
       "capa": "/assets/yt/CJpNlFBaOm0.webp",
-      "capaLargura": 960,
-      "capaAltura": 540
-    },
-    {
-      "id": "OET40iL_iEA",
-      "titulo": "ARQUIPÉLAGO DE ALCATRAZES 🇧🇷 | O Maior Berçário Marinho de São Paulo!",
-      "publicado": "2026-06-16",
-      "url": "https://www.youtube.com/watch?v=OET40iL_iEA",
-      "capa": "/assets/yt/OET40iL_iEA.webp",
       "capaLargura": 960,
       "capaAltura": 540
     }
